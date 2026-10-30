@@ -1,4 +1,4 @@
-const API_URL = "https://space-repetitions-systems.onrender.com";
+const API_URL = "https://space-repetitions-systems.onrender.com/";
 
 let currentCard = null;
 
@@ -102,11 +102,16 @@ async function addCard() {
 }
 
 
-async function loadStudy() {
 
-    const response = await fetch(API_URL +'/api/study');
+async function loadStudy(showAll = false) {
+
+    const url = API_URL + '/api/study' +
+        (showAll ? '?all=1' : '');
+
+    const response = await fetch(url);
     const cards = await response.json();
 
+    studyCards = cards;
     currentCard = cards.length ? cards[0] : null;
 
     document.getElementById('answer').style.display = 'none';
@@ -116,15 +121,15 @@ async function loadStudy() {
     if (!currentCard) {
 
         document.getElementById('studyQuestion').textContent =
-            '🎉 No cards due right now!';
+            '🎉 No cards available!';
 
         document.getElementById('answer').textContent =
-            'Come back when your next revision is due, or add more flashcards.';
+            'Add some flashcards to start studying.';
 
         document.getElementById('showBtn').style.display = 'none';
 
         document.getElementById('studyMessage').textContent =
-            'You are up to date!';
+            'No flashcards found.';
 
         return;
     }
@@ -136,8 +141,9 @@ async function loadStudy() {
         currentCard.answer;
 
     document.getElementById('studyMessage').textContent =
-        'Your revision session is ready!';
+        cards.length + ' flashcards available for studying.';
 }
+
 
 
 function showAnswer() {
