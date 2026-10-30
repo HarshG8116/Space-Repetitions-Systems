@@ -1,220 +1,146 @@
 
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#10101d">
-  <title>RecallX | Smart Learning System</title>
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>RecallX | Smart Learning System</title>
+
+    <link rel="stylesheet" href="/style.css">
 </head>
+
 <body>
 
-<div id="authScreen" class="auth-screen">
-  <div class="auth-card">
-    <div class="logo">R</div>
-    <h1>Welcome to RecallX</h1>
-    <p>Learn smarter. Remember longer.</p>
+<header>
+    <div class="logo">RecallX.</div>
+    <span>SMART LEARNING SYSTEM</span>
+</header>
 
-    <div class="auth-tabs">
-      <button id="loginTab" class="active" onclick="showAuth('login')">Login</button>
-      <button id="registerTab" onclick="showAuth('register')">Register</button>
-    </div>
+<div class="container">
 
-    <form id="authForm">
-      <input id="authName" placeholder="Your name" hidden>
-      <input id="authEmail" type="email" placeholder="Email address" required>
-      <input id="authPassword" type="password" placeholder="Password (minimum 8 characters)" required>
-      <button class="primary-btn" type="submit" id="authSubmit">Login</button>
-    </form>
-    <p id="authMessage" class="message"></p>
-  </div>
+    <section class="welcome">
+        <h1>Welcome to RecallX 👋</h1>
+        <p>Learn smarter. Remember longer.</p>
+    </section>
+
+    <section class="stats">
+
+        <div class="stat">
+            <p>Total Flashcards</p>
+            <h2 id="total">0</h2>
+        </div>
+
+        <div class="stat">
+            <p>Due for Revision</p>
+            <h2 id="due">0</h2>
+        </div>
+
+        <div class="stat">
+            <p>Learned Cards</p>
+            <h2 id="learned">0</h2>
+        </div>
+
+        <div class="stat">
+            <p>Memory Strength</p>
+            <h2 id="strength">0%</h2>
+        </div>
+
+    </section>
+
+    <section class="layout">
+
+        <div class="panel">
+
+            <h2>➕ Create Flashcard</h2>
+
+            <input
+                type="text"
+                id="question"
+                placeholder="Enter your question">
+
+            <textarea
+                id="answerInput"
+                placeholder="Enter your answer"></textarea>
+
+            <button onclick="addCard()">
+                Add Flashcard
+            </button>
+
+            <p id="addMessage" class="message"></p>
+
+            <div class="cards-list">
+                <h3>Your Flashcards</h3>
+                <div id="cardList"></div>
+            </div>
+
+        </div>
+
+        <div class="panel">
+
+            <h2>📚 Study Session</h2>
+
+            <div class="study-card">
+
+                <h2 id="studyQuestion">
+                    Ready to learn?
+                </h2>
+
+                <p id="answer"></p>
+
+                <button id="showBtn" onclick="showAnswer()">
+                    Show Answer
+                </button>
+
+                <div id="ratings">
+
+                    <p>How well did you remember?</p>
+
+                    <button class="hard"
+                            onclick="review('hard')">
+                        Hard
+                    </button>
+
+                    <button class="medium"
+                            onclick="review('medium')">
+                        Medium
+                    </button>
+
+                    <button class="easy"
+                            onclick="review('easy')">
+                        Easy
+                    </button>
+
+                </div>
+
+            </div>
+
+            <h3>⭐ Memory Strength</h3>
+
+            <div class="progress">
+                <div id="progressFill"></div>
+            </div>
+
+            <p id="strengthMessage" class="message">
+                Start studying to improve your memory!
+            </p>
+
+            <p id="studyMessage" class="message"></p>
+
+            <button class="secondary" onclick="loadStudy()">
+                Refresh Study Session
+            </button>
+
+        </div>
+
+    </section>
+
 </div>
 
-<div id="appScreen" hidden>
-  <aside class="sidebar">
-    <div class="brand"><span>R</span> RecallX</div>
+<script src="/script.js"></script>
 
-    <nav>
-      <a href="#dashboard" class="active">◈ Dashboard</a>
-      <a href="#flashcards">▤ Flashcards</a>
-      <a href="#review">✧ Study Room</a>
-      <a href="#advisor">◉ Smart Advisor</a>
-      <a href="#analytics">▥ Analytics</a>
-    </nav>
-
-    <div class="sidebar-bottom">
-      <p>MEMORY STREAK</p>
-      <h2>🔥 <span id="streak">0</span> Days</h2>
-      <button class="logout-btn" onclick="logout()">Log out ↗</button>
-    </div>
-  </aside>
-
-  <main class="main-content">
-    <header class="topbar">
-      <div>
-        <h2 id="welcome">Good morning!</h2>
-        <p>Your personal learning space</p>
-      </div>
-      <div class="profile" id="profileName">Student</div>
-    </header>
-
-    <section id="dashboard" class="page">
-      <div class="hero">
-        <div>
-          <span class="eyebrow">YOUR LEARNING JOURNEY</span>
-          <h1>Build a stronger<br>memory every day.</h1>
-          <p>Small revisions today. Better results tomorrow.</p>
-          <button class="primary-btn" onclick="showPage('review')">Start studying →</button>
-        </div>
-        <div class="hero-icon">🧠</div>
-      </div>
-
-      <div class="stats-grid">
-        <div class="stat-card">
-          <span>Total Flashcards</span>
-          <h2 id="totalCards">0</h2>
-          <small>Cards in your collection</small>
-        </div>
-        <div class="stat-card">
-          <span>Due Today</span>
-          <h2 id="dueCards">0</h2>
-          <small>Ready for revision</small>
-        </div>
-        <div class="stat-card">
-          <span>Reviewed Today</span>
-          <h2 id="reviewedToday">0</h2>
-          <small>Cards completed</small>
-        </div>
-        <div class="stat-card">
-          <span>Mastered</span>
-          <h2 id="masteredCards">0</h2>
-          <small>Strong memory cards</small>
-        </div>
-      </div>
-
-      <div class="content-grid">
-        <div class="panel">
-          <h3>Today's Learning Plan</h3>
-          <p id="studyPlan">Loading your study plan...</p>
-          <button class="secondary-btn" onclick="showPage('review')">Open Study Room</button>
-        </div>
-        <div class="panel">
-          <h3>Exam Countdown</h3>
-          <input type="date" id="examDate">
-          <h2 id="countdown">No exam selected</h2>
-          <button class="secondary-btn" onclick="saveExam()">Save exam date</button>
-        </div>
-      </div>
-    </section>
-
-    <section id="flashcards" class="page" hidden>
-      <div class="section-heading">
-        <div>
-          <h1>My Flashcards</h1>
-          <p>Create and organize your study material.</p>
-        </div>
-      </div>
-
-      <div class="panel form-panel">
-        <h3>Create a New Flashcard</h3>
-        <form id="cardForm">
-          <input id="cardSubject" placeholder="Subject (e.g. Python)" required>
-          <input id="cardFront" placeholder="Question / Front side" required>
-          <textarea id="cardBack" placeholder="Answer / Back side" required></textarea>
-          <input id="cardHint" placeholder="Memory hint (optional)">
-          <input id="cardAlternative" placeholder="Alternative question (optional)">
-          <button class="primary-btn">+ Add Flashcard</button>
-        </form>
-        <p id="cardMessage" class="message"></p>
-      </div>
-
-      <div id="cardList" class="card-list"></div>
-    </section>
-
-    <section id="review" class="page" hidden>
-      <div class="section-heading">
-        <div>
-          <h1>Study Room</h1>
-          <p>Recall. Reflect. Remember.</p>
-        </div>
-      </div>
-
-      <div class="review-container panel">
-        <div class="review-top">
-          <span id="reviewSubject">Your Flashcards</span>
-          <span id="reviewProgress">0 / 0</span>
-        </div>
-
-        <div class="flashcard" id="studyCard" onclick="flipCard()">
-          <span class="card-label" id="cardLabel">QUESTION</span>
-          <h2 id="studyQuestion">No cards due today!</h2>
-          <p id="flipInstruction">Click to reveal the answer</p>
-        </div>
-
-        <div id="rescueArea" hidden>
-          <button class="secondary-btn" onclick="showHint()">💡 Give me a hint</button>
-          <button class="secondary-btn" onclick="showAlternative()">↻ Alternative question</button>
-          <p id="rescueText"></p>
-        </div>
-
-        <div id="reviewControls" hidden>
-          <p>How well did you remember?</p>
-          <div class="rating-buttons">
-            <button class="again" onclick="rateCard(0)">Again</button>
-            <button class="hard" onclick="rateCard(1)">Hard</button>
-            <button class="good" onclick="rateCard(2)">Good</button>
-            <button class="easy" onclick="rateCard(3)">Easy</button>
-          </div>
-        </div>
-
-        <button id="revealBtn" class="primary-btn" onclick="flipCard()">Reveal Answer</button>
-      </div>
-    </section>
-
-    <section id="advisor" class="page" hidden>
-      <div class="section-heading">
-        <div>
-          <h1>Smart Study Advisor ✨</h1>
-          <p>Your personal revision assistant.</p>
-        </div>
-      </div>
-      <div class="panel advisor-panel">
-        <div class="advisor-icon">🧠</div>
-        <h2>Your learning recommendations</h2>
-        <div id="advisorContent">Loading recommendations...</div>
-        <button class="primary-btn" onclick="loadDashboard()">Refresh Advice</button>
-      </div>
-    </section>
-
-    <section id="analytics" class="page" hidden>
-      <div class="section-heading">
-        <div>
-          <h1>Learning Analytics</h1>
-          <p>Understand your memory performance.</p>
-        </div>
-      </div>
-      <div class="panel">
-        <h3>Memory Retention</h3>
-        <div class="progress-track">
-          <div id="retentionBar" class="progress-fill"></div>
-        </div>
-        <h2 id="retentionText">0% retention</h2>
-        <p id="analyticsSummary">Your progress will appear here.</p>
-      </div>
-      <div class="panel">
-        <h3>Cards requiring attention</h3>
-        <div id="riskList"></div>
-      </div>
-    </section>
-  </main>
-</div>
-
-<div id="toast" class="toast"></div>
-
-<script src="app.js"></script>
 </body>
 </html>
