@@ -1,9 +1,10 @@
+const API_URL = "https://space-repetitions-systems.onrender.com";
 
 let currentCard = null;
 
 async function loadStats() {
 
-    const response = await fetch('/api/stats');
+    const response = await fetch(API_URL +'/api/stats');
     const data = await response.json();
 
     document.getElementById('total').textContent = data.total;
@@ -23,7 +24,7 @@ async function loadStats() {
 
 async function loadCards() {
 
-    const response = await fetch('/api/cards');
+    const response = await fetch(API_URL +'/api/cards');
     const cards = await response.json();
 
     const list = document.getElementById('cardList');
@@ -68,7 +69,7 @@ async function addCard() {
         return;
     }
 
-    const response = await fetch('/api/cards', {
+    const response = await fetch(API_URL +'/api/cards', {
 
         method: 'POST',
 
@@ -103,7 +104,7 @@ async function addCard() {
 
 async function loadStudy() {
 
-    const response = await fetch('/api/study');
+    const response = await fetch(API_URL +'/api/study');
     const cards = await response.json();
 
     currentCard = cards.length ? cards[0] : null;
@@ -155,7 +156,7 @@ async function review(rating) {
 
     if (!currentCard) return;
 
-    const response = await fetch(
+    const response = await fetch(API_URL +
         '/api/review/' + currentCard.id,
         {
             method: 'POST',
